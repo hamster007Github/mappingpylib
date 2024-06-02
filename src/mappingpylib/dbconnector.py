@@ -44,26 +44,22 @@ class DbConnector():
 
     def _connect(self) -> mysql.connector.MySQLConnection:
         """Connect to database, if not already connected"""
-        try:
-            # only create new connection, if not already a connection is available
-            if self._db_connection is None or not self._db_connection.is_connected():
-                self._db_connection = mysql.connector.connect(
-                    host = self._host,
-                    port = self._port,
-                    user = self._username,
-                    passwd = self._password,
-                    database = self._db_name
-                )
-                log.debug("DbConnector: SQL db connected successfully")
-        except Exception:
-            log.error("DbConnector: SQL connection error.")
-            log.exception("Exception info:")
+        # only create new connection, if not already a connection is available
+        if self._db_connection is None or not self._db_connection.is_connected():
+            self._db_connection = mysql.connector.connect(
+                host = self._host,
+                port = self._port,
+                user = self._username,
+                passwd = self._password,
+                database = self._db_name
+            )
+            log.debug("SQL db connected successfully")
         return self._db_connection
 
     def _disconnect(self) -> None:
         """Disconnect a open database connection"""
         if self._db_connection is not None:
-            log.debug("DbConnector: disconnect")
+            log.debug("disconnect")
             self._db_connection.close()
 
     def execute_query(self, query:str, commit:bool=False, disconnect:bool=True) -> List[Dict]:
@@ -71,23 +67,24 @@ class DbConnector():
         result = None
         try:
             connection = self._connect()
-            cursor = connection.cursor(dictionary=True)
-            log.debug(f"DbConnector: SQL query '{query}'...")
-            cursor.execute(query)
-            if commit:
-                result = connection.commit()
-            else:
-                result = cursor.fetchall()
-            cursor.close()
-            if disconnect:
-                self._disconnect()
-            log.debug(f"DbConnector: SQL query executed, result: {result}")
-        #except mysql.connector.errors.DatabaseError:
-        #    log.error("DbConnector: mySQL DatabaseError. Cound not connect to database. MySQL server down?")
-        #    log.exception("Exception info:")
-        #    self._disconnect()
+            if connection is not None:
+                cursor = connection.cursor(dictionary=True)
+                log.debug(f"SQL query '{query}'...")
+                cursor.execute(query)
+                if commit:
+                    result = connection.commit()
+                else:
+                    result = cursor.fetchall()
+                cursor.close()
+                if disconnect:
+                    self._disconnect()
+                log.debug(f"SQL query executed, result: {result}")
+        except mysql.connector.errors.DatabaseError as error:
+            log.error(f"DatabaseError '{error}'. Cound not connect to database. MySQL server down?")
+            self._disconnect()
         except Exception as error:
-            log.error(f"DbConnector: SQL query error: '{error}'")
+            log.error(f"unexpected SQL query error: '{error}'")
+            log.exception("Exception info:")
             self._disconnect()
             result = None
         return result
