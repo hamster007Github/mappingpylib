@@ -53,7 +53,7 @@ class DragoniteDb():
         """
         return None
 
-    def get_account_number(self, min_level:int=None, max_level:int=None, is_invalid:bool=None, is_disabled:bool=None, is_warned:bool=None, is_suspended:bool=None, is_banned:bool=None, has_cooldown:bool=None, has_valid_token:bool=None, disconnect:bool=True) -> int:
+    def get_account_number(self, min_level:int=None, max_level:int=None, is_invalid:bool=None, is_disabled:bool=None, is_warned:bool=None, is_suspended:bool=None, is_banned:bool=None, has_cooldown:bool=None, has_valid_token:bool=None) -> int:
         """Number accounts matching with filters by optional parameter."""
         count = None
         try:
@@ -109,7 +109,7 @@ class DragoniteDb():
                     sql_query += f" AND {filter_query}"
             # execute query
             log.debug(f"new get_account_number() query: {sql_query}")
-            count = self._dbconnector.execute_query(sql_query, disconnect=disconnect)[0]["count"]
+            count = self._dbconnector.execute_query(sql_query)[0]["count"]
         except Exception as error:
             log.error(f"get_account_number(): unexpected exception: '{error}'")
         return count
