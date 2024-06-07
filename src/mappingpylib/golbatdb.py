@@ -65,8 +65,6 @@ class GolbatDb():
         # calculate Golbat dataset timestamp based on timestamp_latest_utc (Golbat always has fix datetime 0, 60, ...)
         timestamp_stats_latest = int((timestamp_latest_utc // 60) * 60)
         timestamp_stats_oldest = int(timestamp_stats_latest - (60 * time_window_min))
-        log.info(f"timestamp_stats_latest: {timestamp_stats_latest}")
-        log.info(f"timestamp_stats_oldest: {timestamp_stats_oldest}")
         sql_query = f"SELECT sum(totMon) AS mon_all, sum(ivMon) AS mon_iv FROM (SELECT totMon, ivMon FROM pokemon_area_stats WHERE area='world' AND fence='world' AND datetime >= {timestamp_stats_oldest} AND datetime <= {timestamp_stats_latest}) t1;"
         results = self._dbconnector.execute_query(sql_query)
         mon_all = 0
@@ -87,7 +85,6 @@ class GolbatDb():
         if mon_iv is None:
             mon_iv = 0
         iv_percentage = self._calculate_percentage(mon_iv, mon_all)
-        log.info(f"stats: all:{mon_all}, iv:{mon_iv}, {iv_percentage}%")
         return mon_all, mon_iv, iv_percentage
 
     def get_raids(self, raidlevel_list:List[int], unknown_raids:bool = True, geofence:str = "", order_time_reverse:bool = False) -> List[Dict]:
