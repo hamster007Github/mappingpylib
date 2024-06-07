@@ -53,7 +53,7 @@ class DragoniteDb():
         """
         return None
 
-    def get_account_number(self, min_level:int=None, max_level:int=None, is_invalid:bool=None, is_disabled:bool=None, is_warned:bool=None, is_suspended:bool=None, is_banned:bool=None, has_cooldown:bool=None, has_valid_token:bool=None) -> int:
+    def get_account_number(self, min_level:int=None, max_level:int=None, is_invalid:bool=None, is_disabled:bool=None, is_warned:bool=None, is_suspended:bool=None, is_banned:bool=None, has_cooldown:bool=None, has_valid_token:bool=None, is_auth_banned:bool=None) -> int:
         """Number accounts matching with filters by optional parameter."""
         count = None
         try:
@@ -88,6 +88,11 @@ class DragoniteDb():
             if is_banned is not None:
                 tmp_str = "banned"
                 if not is_banned:
+                    tmp_str = "NOT " + tmp_str
+                filter_query_list.append(tmp_str)
+            if is_auth_banned is not None:
+                tmp_str = "auth_banned"
+                if not is_auth_banned:
                     tmp_str = "NOT " + tmp_str
                 filter_query_list.append(tmp_str)
             if has_cooldown is not None:
