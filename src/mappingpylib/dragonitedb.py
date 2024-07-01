@@ -103,9 +103,9 @@ class DragoniteDb():
                 filter_query_list.append(tmp_str)
             if has_valid_token is not None:
                 if has_valid_token:
-                    tmp_str = "(last_refreshed > (UNIX_TIMESTAMP() - 30*86400) AND refresh_token != '' AND refresh_token IS NOT NULL)"
+                    tmp_str = "(refresh_token != '' AND last_refreshed > (UNIX_TIMESTAMP() - 30*86400))"
                 else:
-                    tmp_str = "(last_refreshed <= (UNIX_TIMESTAMP() - 30*86400) OR refresh_token == '' OR refresh_token IS NULL)"
+                    tmp_str = "(refresh_token = '' OR last_refreshed <= (UNIX_TIMESTAMP() - 30*86400))"
                 filter_query_list.append(tmp_str)
             sql_query = "SELECT count(*) as count FROM account"
             if len(filter_query_list):
