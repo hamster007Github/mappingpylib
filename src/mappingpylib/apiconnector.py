@@ -33,9 +33,15 @@ class ApiCommunicationError(Exception):
 # Class: ApiConnector
 #****************************************
 class ApiConnector():
-    def __init__(self, host:str, port:int) -> None:
-        self._base_url = host + f":{port}"
-        self._host = host
+    def __init__(self, hosturl:str, port:int = None) -> None:
+        """ ApiConnector constructor
+        hosturl: shall beginn with "http://" or "https://"
+        """
+        if port is not None:
+            self._base_url = hosturl + f":{port}"
+        else:
+            self._base_url = hosturl
+        self._hosturl = hosturl
         self._port = port
         self._basicauth = None
         self._secretauth = None

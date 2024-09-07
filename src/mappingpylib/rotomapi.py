@@ -29,8 +29,8 @@ log = logging.getLogger(__name__)
 # Class: RotomApi
 #****************************************
 class RotomApi():
-    def __init__(self, host:str, port:int, basicauth_dict:Dict[str,str] = None, secretauth:str = None) -> None:
-        self._api_connector = ApiConnector(host, port)
+    def __init__(self, hosturl:str, port:int = None, basicauth_dict:Dict[str,str] = None, secretauth:str = None) -> None:
+        self._api_connector = ApiConnector(hosturl, port)
         if basicauth_dict is not None:
             self._api_connector.set_basicauth(basicauth_dict)
         elif secretauth is not None:

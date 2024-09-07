@@ -29,9 +29,9 @@ log = logging.getLogger(__name__)
 # Class: DragoniteApi
 #****************************************
 class DragoniteApi():
-    def __init__(self, host:str, port:int, basicauth_dict:Dict[str,str] = None) -> None:
+    def __init__(self, hosturl:str, port:int = None, basicauth_dict:Dict[str,str] = None) -> None:
         # Note: dragonite API don't support secret -> skip
-        self._api_connector = ApiConnector(host, port)
+        self._api_connector = ApiConnector(hosturl, port)
         if basicauth_dict is not None:
             self._api_connector.set_basicauth(basicauth_dict)
 
