@@ -6,7 +6,6 @@
 * Import
 ****************************************
 '''
-from typing import Dict
 # logging
 import logging
 #import mappingpylib
@@ -29,17 +28,15 @@ log = logging.getLogger(__name__)
 # Class: DragoniteApi
 #****************************************
 class DragoniteApi():
-    def __init__(self, host:str, port:int, basicauth_dict:Dict[str,str] = None, secretauth_dict:Dict[str,str] = None) -> None:
-        self._api_connector = ApiConnector(host, port)
-        if basicauth_dict is not None:
-            self._api_connector.set_basicauth(basicauth_dict)
-        elif secretauth_dict is not None:
-            self._api_connector.set_secretcauth(secretauth_dict)
+    def __init__(self, hosturl:str, port:int = None, basicauth:list[str,str] = None) -> None:
+        # Note: dragonite API don't support secret -> skip
+        self._api_connector = ApiConnector(hosturl, port)
+        if basicauth is not None:
+            self._api_connector.set_basicauth(basicauth[0], basicauth[1])
 
-    def get_status(self) -> Dict:
+    def get_status(self) -> dict:
         status_dict = {}
         try:
-            log.info("Start DevTest...")
             status_dict = self._api_connector.get_json("/status/")
         except apiconnector.ApiCommunicationError as error:
             log.error(f"API communication error: {error}")

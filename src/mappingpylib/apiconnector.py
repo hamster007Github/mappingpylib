@@ -33,9 +33,15 @@ class ApiCommunicationError(Exception):
 # Class: ApiConnector
 #****************************************
 class ApiConnector():
-    def __init__(self, host:str, port:int) -> None:
-        self._base_url = host + f":{port}"
-        self._host = host
+    def __init__(self, hosturl:str, port:int = None) -> None:
+        """ ApiConnector constructor
+        hosturl: shall beginn with "http://" or "https://"
+        """
+        if port is not None:
+            self._base_url = hosturl + f":{port}"
+        else:
+            self._base_url = hosturl
+        self._hosturl = hosturl
         self._port = port
         self._basicauth = None
         self._secretauth = None
@@ -82,7 +88,7 @@ class ApiConnector():
     def set_basicauth(self, username:str, password:str) -> None:
         # invalidate auth bearer data
         self._secretauth = None
-        self._basicauth = requests.HTTPBasicAuth(username, password)
+        self._basicauth = requests.auth.HTTPBasicAuth(username, password)
 
     def set_secretauth(self, secret_name:str, secret:str) -> None:
         # invalidate basic auth data
@@ -90,7 +96,9 @@ class ApiConnector():
         self._secretauth = {secret_name: secret}
 
     def get_json(self, suburl:str) -> Dict| None:
-        """Connect to database, if not already connected"""
+        """http-get request and return response json
+        Note: if response is no JSON compatible, ValueError will be raised
+        """
         response_json = None
         try:
             response = self._get_request(suburl)
@@ -104,7 +112,7 @@ class ApiConnector():
         return response_json
 
     def get_text(self, suburl:str) -> str | None:
-        """Connect to database, if not already connected"""
+        """http-get request and return response text"""
         response_text = None
         try:
             response = self._get_request(suburl)
