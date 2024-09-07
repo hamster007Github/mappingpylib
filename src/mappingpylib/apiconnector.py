@@ -88,7 +88,7 @@ class ApiConnector():
     def set_basicauth(self, username:str, password:str) -> None:
         # invalidate auth bearer data
         self._secretauth = None
-        self._basicauth = requests.HTTPBasicAuth(username, password)
+        self._basicauth = requests.auth.HTTPBasicAuth(username, password)
 
     def set_secretauth(self, secret_name:str, secret:str) -> None:
         # invalidate basic auth data
