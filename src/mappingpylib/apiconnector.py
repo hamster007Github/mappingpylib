@@ -90,7 +90,9 @@ class ApiConnector():
         self._secretauth = {secret_name: secret}
 
     def get_json(self, suburl:str) -> Dict| None:
-        """Connect to database, if not already connected"""
+        """http-get request and return response json
+        Note: if response is no JSON compatible, ValueError will be raised
+        """
         response_json = None
         try:
             response = self._get_request(suburl)
@@ -104,7 +106,7 @@ class ApiConnector():
         return response_json
 
     def get_text(self, suburl:str) -> str | None:
-        """Connect to database, if not already connected"""
+        """http-get request and return response text"""
         response_text = None
         try:
             response = self._get_request(suburl)

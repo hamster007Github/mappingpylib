@@ -29,17 +29,15 @@ log = logging.getLogger(__name__)
 # Class: DragoniteApi
 #****************************************
 class DragoniteApi():
-    def __init__(self, host:str, port:int, basicauth_dict:Dict[str,str] = None, secretauth_dict:Dict[str,str] = None) -> None:
+    def __init__(self, host:str, port:int, basicauth_dict:Dict[str,str] = None) -> None:
+        # Note: dragonite API don't support secret -> skip
         self._api_connector = ApiConnector(host, port)
         if basicauth_dict is not None:
             self._api_connector.set_basicauth(basicauth_dict)
-        elif secretauth_dict is not None:
-            self._api_connector.set_secretcauth(secretauth_dict)
 
     def get_status(self) -> Dict:
         status_dict = {}
         try:
-            log.info("Start DevTest...")
             status_dict = self._api_connector.get_json("/status/")
         except apiconnector.ApiCommunicationError as error:
             log.error(f"API communication error: {error}")
