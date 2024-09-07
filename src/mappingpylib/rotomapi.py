@@ -6,7 +6,6 @@
 * Import
 ****************************************
 '''
-from typing import Dict
 # logging
 import logging
 #import mappingpylib
@@ -29,10 +28,10 @@ log = logging.getLogger(__name__)
 # Class: RotomApi
 #****************************************
 class RotomApi():
-    def __init__(self, hosturl:str, port:int = None, basicauth_dict:Dict[str,str] = None, secretauth:str = None) -> None:
+    def __init__(self, hosturl:str, port:int = None, basicauth:list[str,str] = None, secretauth:str = None) -> None:
         self._api_connector = ApiConnector(hosturl, port)
-        if basicauth_dict is not None:
-            self._api_connector.set_basicauth(basicauth_dict)
+        if basicauth is not None:
+            self._api_connector.set_basicauth(basicauth[0], basicauth[1])
         elif secretauth is not None:
             secretauth_dict = {"x-rotom-secret": secretauth}
             self._api_connector.set_secretcauth(secretauth_dict)
