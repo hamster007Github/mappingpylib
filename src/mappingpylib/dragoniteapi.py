@@ -44,6 +44,19 @@ class DragoniteApi():
             log.exception(f"Unexpectd exception: '{error}'")
         return status_dict
 
+    def get_accounts(self, provider:str="") -> dict:
+        '''
+            
+        '''
+        status_dict = {}
+        try:
+            status_dict = self._api_connector.get_json(f"/accounts/level-stats?provider={provider}")
+        except apiconnector.ApiCommunicationError as error:
+            log.error(f"API communication error: {error}")
+        except Exception as error:
+            log.exception(f"Unexpectd exception: '{error}'")
+        return status_dict
+
     def reload(self) -> bool:
         success = False
         try:
