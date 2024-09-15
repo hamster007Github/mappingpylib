@@ -53,11 +53,11 @@ class DragoniteDb():
         """
         return None
 
-    def get_account_number(self, min_level:int=None, max_level:int=None, is_invalid:bool=None, is_disabled:bool=None, is_warned:bool=None, is_suspended:bool=None, is_banned:bool=None, has_cooldown:bool=None, has_valid_token:bool=None, is_auth_banned:bool=None) -> int:
+    def get_account_number(self, min_level:int=None, max_level:int=None, is_invalid:bool=None, is_disabled:bool=None, is_warned:bool=None, is_suspended:bool=None, is_banned:bool=None, has_cooldown:bool=None, has_valid_token:bool=None, is_auth_banned:bool=None, provider:str=None, is_ar_banned:bool=None) -> int:
         """Number accounts matching with filters by optional parameter."""
         count = None
         try:
-            # build filter query
+            # build single filter queries
             filter_query_list = []
             if min_level is not None:
                 filter_query_list.append(f"level >= {min_level}")
@@ -107,6 +107,15 @@ class DragoniteDb():
                 else:
                     tmp_str = "(refresh_token = '' OR last_refreshed <= (UNIX_TIMESTAMP() - 30*86400))"
                 filter_query_list.append(tmp_str)
+            if provider is not None:
+                filter_query_list.append(f"provider='{provider}'")
+            if is_ar_banned is not None:
+                if is_ar_banned:
+                    tmp_str = "ar_ban_state=1"
+                else:
+                    tmp_str = "ar_ban_state=0"
+                filter_query_list.append(tmp_str)
+            # build complete SQL-Query
             sql_query = "SELECT count(*) as count FROM account"
             if len(filter_query_list):
                 sql_query += " WHERE " + filter_query_list.pop(0)
