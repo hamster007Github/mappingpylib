@@ -34,8 +34,8 @@ class DragoniteApi():
         if basicauth is not None:
             self._api_connector.set_basicauth(basicauth[0], basicauth[1])
 
-    def get_status(self) -> dict:
-        status_dict = {}
+    def get_status(self) -> dict | None:
+        status_dict = None
         try:
             status_dict = self._api_connector.get_json("/status/")
         except apiconnector.ApiCommunicationError as error:
@@ -44,11 +44,11 @@ class DragoniteApi():
             log.exception(f"Unexpectd exception: '{error}'")
         return status_dict
 
-    def get_accounts(self, provider:str="") -> dict:
+    def get_accounts(self, provider:str="") -> dict | None:
         '''
             
         '''
-        status_dict = {}
+        status_dict = None
         try:
             status_dict = self._api_connector.get_json(f"/accounts/level-stats?provider={provider}")
         except apiconnector.ApiCommunicationError as error:

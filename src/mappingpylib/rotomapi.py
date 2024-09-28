@@ -44,7 +44,7 @@ class RotomApi():
                     worker_list.append(worker["worker"])
         return worker_list
 
-    def get_status(self) -> dict:
+    def get_status(self) -> dict | None:
         '''
         get raw status dict from /api/status. Return 'None' in case of error
         '''
@@ -57,7 +57,7 @@ class RotomApi():
             log.exception(f"Unexpectd exception: '{error}'")
         return status_dict
 
-    def get_status_devicelist(self) -> dict:
+    def get_status_devicelist(self) -> dict | None:
         '''
         get custom device status list. Return 'None' in case of error
         '''
